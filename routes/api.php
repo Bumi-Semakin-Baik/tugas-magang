@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\BukuController;
 use App\Http\Controllers\AnggotaController;
+use App\Http\Controllers\PeminjamanController;
 
 /*
 |--------------------------------------------------------------------------
@@ -26,3 +27,7 @@ Route::get('anggota/all', [AnggotaController::class, 'index']);
 Route::get('anggota{nik_anggota}', [AnggotaController::class, 'showById']);
 Route::put('anggota/update/{nik_anggota}', [AnggotaController::class, 'update']);
 Route::delete('anggota/delete/{nik_anggota}',[AnggotaController::class,'destroy']);
+
+Route::post('peminjaman/store',[PeminjamanController::class,'store']);
+Route::get('peminjaman/index',[PeminjamanController::class,'index']);
+Route::put('peminjaman/update_status/{id_peminjaman}',[PeminjamanController::class,'update_status']);
