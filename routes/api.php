@@ -5,6 +5,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\BukuController;
 use App\Http\Controllers\AnggotaController;
 use App\Http\Controllers\PeminjamanController;
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\API\JWTAuthController;
 
 /*
 |--------------------------------------------------------------------------
@@ -31,3 +33,14 @@ Route::delete('anggota/delete/{nik_anggota}',[AnggotaController::class,'destroy'
 Route::post('peminjaman/store',[PeminjamanController::class,'store']);
 Route::get('peminjaman/index',[PeminjamanController::class,'index']);
 Route::put('peminjaman/update_status/{id_peminjaman}',[PeminjamanController::class,'update_status']);
+
+Route::post('/postImage',[UserController::class,'storeImage']);
+
+Route::post('register', [JWTAuthController::class, 'register']);
+Route::post('login', [JWTAuthController::class, 'login']);
+
+Route::group(['middleware' => 'auth:api'], function () {
+    Route::put('/updateImage',[UserController::class,'updateImage']);
+    Route::post('logout', [JWTAuthController::class, 'logout']);
+
+});
