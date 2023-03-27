@@ -10,25 +10,25 @@ use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
-    public function storeImage(Request $request)
-    {
-        $data= new User();
+    // public function storeImage(Request $request)
+    // {
+    //     $data= new User();
 
-        if($request->file('image')){
-            $file= $request->file('image');
-            $filename= date('YmdHi').$file->getClientOriginalName();
-            $file-> move(public_path('images'), $filename);
-            $data['profileImage'] = $filename;
-        }
-        $data->save();
+    //     if($request->file('image')){
+    //         $file= $request->file('image');
+    //         $filename= date('YmdHi').$file->getClientOriginalName();
+    //         $file-> move(public_path('images'), $filename);
+    //         $data['profileImage'] = $filename;
+    //     }
+    //     $data->save();
 
-        return response()->json([
-            'code' => 200,
-            'message' => 'success',
-            'data' => $postImage
-        ]);
+    //     return response()->json([
+    //         'code' => 200,
+    //         'message' => 'success',
+    //         'data' => $postImage
+    //     ]);
 
-    }
+    // }
     // public function imageStore(ImageStoreRequest $request)
     // {
 
