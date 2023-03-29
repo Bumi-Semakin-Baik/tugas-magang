@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\Peminjaman;
 use App\Models\anggota;
+use App\Models\BukuModel;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class PeminjamanController extends Controller
 {
@@ -47,17 +49,44 @@ class PeminjamanController extends Controller
 
         Peminjaman::create($data);
 
+        $query = DB::table('buku')
+        ->where('kode_buku',$request->kode_buku);
+
+        $query->decrement('stok_buku', 1);
+
         return response()->json([
             'code' => '200',
             'message' => 'success',
             'data' => $request->all()
         ]);
     }
-    public function showName($id){
+    public function showName(){
 
         // $data = peminjaman::join('anggota', 'anggota.id_peminjaman', '=', 'peminjaman.id_peminjaman')
         //                 ->select(array('id_anggota','nik_anggota','nama_anggota'))->get();
         $data = anggota::select(array('nik_anggota','nama_anggota'))->get();
+
+
+        if($data == null){
+            return response()->json([
+                'code' => 404,
+                'message' => 'Data not found',
+                'data' => null
+            ]);
+        }
+        return response()->json([
+            'code' => 200,
+            'message' => 'success',
+            'data' => $data
+            ]);
+    }
+    public function getBuku(){
+
+        // $data = peminjaman::join('anggota', 'anggota.id_peminjaman', '=', 'peminjaman.id_peminjaman')
+        //                 ->select(array('id_anggota','nik_anggota','nama_anggota'))->get();
+        $data = BukuModel::select(array('kode_buku','nama_buku'))
+                            ->where('stok_buku','>',0)
+                            ->get();
 
 
         if($data == null){
@@ -92,6 +121,10 @@ class PeminjamanController extends Controller
         "status" => $request->status);
 
         $data = $data->update($data_update);
+        $query = DB::table('buku')
+        ->where('kode_buku',$request->kode_buku);
+
+        $query->increment('stok_buku', 1);
 
         return response()->json([
             'code' => 200,
@@ -139,5 +172,25 @@ class PeminjamanController extends Controller
 
     }
 
+    public function count_ongoing(){
+
+        $data = peminjaman::select(array('id_peminjaman'))
+                        ->where('status','Dipinjam')
+                        ->get();
+        $count = count($data);
+
+        if($data == null){
+            return response()->json([
+                'code' => 404,
+                'message' => 'Data not found',
+                'data' => null
+            ]);
+        }
+        return response()->json([
+            'code' => 200,
+            'message' => 'success',
+            'data' => $count
+            ]);
+    }
 
 }
